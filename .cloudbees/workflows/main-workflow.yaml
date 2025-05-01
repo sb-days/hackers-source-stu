@@ -12,8 +12,8 @@ permissions:
   id-token: write
 env:
   APP_NAME: hackers-organized
-  NAMESPACE-PROD: hackers-organized-sbrown
-  NAMESPACE-PREPROD: hackers-organized-sbrown-preprod
+  NAMESPACEPROD: hackers-organized-sbrown
+  NAMESPACEPREPROD: hackers-organized-sbrown-preprod
 jobs:
   test:
     outputs:
@@ -165,7 +165,7 @@ jobs:
         with:
           chart-location: ${{ cloudbees.workspace }}/chart
           release-name: ${{ env.APP_NAME }}
-          namespace: ${{ env.NAMESPACE-PREPROD }}
+          namespace: ${{ env.NAMESPACEPREPROD }}
           values: |
             image:
               tag: ${{ cloudbees.scm.sha }}
@@ -176,7 +176,7 @@ jobs:
         with:
           content: |-
             ## Deployed environment
-            [Prep Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACE-PREPROD }}.preview.cb-demos.io/)
+            [Prep Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACEPREPROD }}.preview.cb-demos.io/)
 
             Running hackers-organized:${{ cloudbees.scm.sha }}
           format: MARKDOWN
@@ -206,18 +206,18 @@ jobs:
         with:
           chart-location: ${{ cloudbees.workspace }}/chart
           release-name: ${{ env.APP_NAME }}
-          namespace: ${{ env.NAMESPACE-PROD }}
+          namespace: ${{ env.NAMESPACEPROD }}
           values: |
             image:
               tag: ${{ cloudbees.scm.sha }}
             fmKey: ${{ secrets.FM_TOKEN }}
-            hostname: ${{ env.APP_NAME }}-${{ env.NAMESPACE-PROD }}.preview.cb-demos.io
+            hostname: ${{ env.APP_NAME }}-${{ env.NAMESPACEPROD }}.preview.cb-demos.io
       - name: Publish evidence
         uses: cloudbees-io/publish-evidence-item@v1
         with:
           content: |-
             ## Deployed environment
-            [Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACE-PROD }}.preview.cb-demos.io/)
+            [Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACEPROD }}.preview.cb-demos.io/)
 
             Running hackers-organized:${{ cloudbees.scm.sha }}
           format: MARKDOWN
