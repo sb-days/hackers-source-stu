@@ -229,7 +229,5 @@ jobs:
           digest: ""
           target-environment: STU Production
     needs:
-      - build-container-image
-      - scan
       - deployPreProd
   
