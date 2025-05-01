@@ -149,7 +149,7 @@ jobs:
             | MAJOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }} |
             | MINOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }} |
           format: MARKDOWN
-  deploy:
+  deployProd:
     environment: STU Production
     steps:
       - name: Checkout
@@ -190,3 +190,5 @@ jobs:
     needs:
       - build-container-image
       - scan
+
+  
