@@ -149,6 +149,47 @@ jobs:
             | MAJOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MAJOR_COUNT }} |
             | MINOR_COUNT          | ${{ steps.FetchSonarQubeIssues.outputs.MINOR_COUNT }} |
           format: MARKDOWN
+  deployPreProd:
+    environment: STU Pre Production
+    steps:
+      - name: Checkout
+        uses: cloudbees-io/checkout@v1
+      - uses: cashokannamalai/kubeconfig@v1
+        name: Set kubeconfig
+        with:
+          secname: ${{ secrets.kubeconfig }}
+      - id: install-chart
+        name: Install helm chart
+        uses: cloudbees-io/helm-install@v1
+        with:
+          chart-location: ${{ cloudbees.workspace }}/chart
+          release-name: ${{ env.APP_NAME }}
+          namespace: ${{ env.NAMESPACE }}
+          values: |
+            image:
+              tag: ${{ cloudbees.scm.sha }}
+            fmKey: ${{ secrets.FM_TOKEN }}
+            hostname: ${{ env.APP_NAME }}-${{ env.NAMESPACE }}.preview.cb-demos.io
+      - name: Publish evidence
+        uses: cloudbees-io/publish-evidence-item@v1
+        with:
+          content: |-
+            ## Deployed environment
+            [Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACE }}.preview.cb-demos.io/)
+
+            Running hackers-organized:${{ cloudbees.scm.sha }}
+          format: MARKDOWN
+      - name: Register_deployed_artifact
+        uses: https://github.com/cloudbees-io/register-deployed-artifact@v1
+        with:
+          name: ${{ secrets.DOCKERHUB_USER }}/hackers-organized
+          version: ${{ cloudbees.scm.sha }}
+          url: ${{ secrets.DOCKERHUB_USER }}/hackers-organized:${{ cloudbees.scm.sha }}
+          digest: ""
+          target-environment: STU Pre Production
+    needs:
+      - build-container-image
+      - scan
   deployProd:
     environment: STU Production
     steps:
@@ -190,5 +231,5 @@ jobs:
     needs:
       - build-container-image
       - scan
-
+      - deployPreProd
   
