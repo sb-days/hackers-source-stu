@@ -12,7 +12,8 @@ permissions:
   id-token: write
 env:
   APP_NAME: hackers-organized
-  NAMESPACE: hackers-organized-sbrown
+  NAMESPACE-PROD: hackers-organized-sbrown
+  NAMESPACE-PREPROD: hackers-organized-sbrown-preprod
 jobs:
   test:
     outputs:
@@ -164,18 +165,18 @@ jobs:
         with:
           chart-location: ${{ cloudbees.workspace }}/chart
           release-name: ${{ env.APP_NAME }}
-          namespace: ${{ env.NAMESPACE }}
+          namespace: ${{ env.NAMESPACE-PREPROD }}
           values: |
             image:
               tag: ${{ cloudbees.scm.sha }}
             fmKey: ${{ secrets.FM_TOKEN }}
-            hostname: ${{ env.APP_NAME }}-${{ env.NAMESPACE }}.preview.cb-demos.io
+            hostname: ${{ env.APP_NAME }}-${{ env.NAMESPACEPREPROD }}.preview.cb-demos.io
       - name: Publish evidence
         uses: cloudbees-io/publish-evidence-item@v1
         with:
           content: |-
             ## Deployed environment
-            [Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACE }}.preview.cb-demos.io/)
+            [Prep Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACE-PREPROD }}.preview.cb-demos.io/)
 
             Running hackers-organized:${{ cloudbees.scm.sha }}
           format: MARKDOWN
@@ -205,18 +206,18 @@ jobs:
         with:
           chart-location: ${{ cloudbees.workspace }}/chart
           release-name: ${{ env.APP_NAME }}
-          namespace: ${{ env.NAMESPACE }}
+          namespace: ${{ env.NAMESPACE-PROD }}
           values: |
             image:
               tag: ${{ cloudbees.scm.sha }}
             fmKey: ${{ secrets.FM_TOKEN }}
-            hostname: ${{ env.APP_NAME }}-${{ env.NAMESPACE }}.preview.cb-demos.io
+            hostname: ${{ env.APP_NAME }}-${{ env.NAMESPACE-PROD }}.preview.cb-demos.io
       - name: Publish evidence
         uses: cloudbees-io/publish-evidence-item@v1
         with:
           content: |-
             ## Deployed environment
-            [Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACE }}.preview.cb-demos.io/)
+            [Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACE-PROD }}.preview.cb-demos.io/)
 
             Running hackers-organized:${{ cloudbees.scm.sha }}
           format: MARKDOWN
