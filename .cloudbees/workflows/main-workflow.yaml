@@ -176,7 +176,7 @@ jobs:
         with:
           content: |-
             ## Deployed environment
-            [Prep Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACEPREPROD }}.preview.cb-demos.io/)
+            [Pre Production frontend](https://${{ env.APP_NAME }}-${{ env.NAMESPACEPREPROD }}.preview.cb-demos.io/)
 
             Running hackers-organized:${{ cloudbees.scm.sha }}
           format: MARKDOWN
