@@ -1,7 +1,9 @@
 name: test-and-build-image2
 on:
   workflow_dispatch:
-
+  push:
+    branches:
+      - "**"
 jobs:
   build:
     runs-on: ubuntu-latest 
